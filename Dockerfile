@@ -17,7 +17,7 @@ ENV BUPCTAR=$BUPCDIR.tar.gz
 ENV BUPCURL=http://upc.lbl.gov/download/release/$BUPCTAR
 
 RUN apt-get update  && \
-    apt-get install -y wget openmpi-bin libopenmpi-dev build-essential perl cmake python && \
+    apt-get install -y wget openmpi-bin libopenmpi-dev openssh-server build-essential perl cmake python && \
     wget -O $CUPCTAR $CUPCURL && \
     wget -O $BUPCTAR $BUPCURL && \
     tar -xzf $CUPCTAR && \
@@ -31,13 +31,13 @@ RUN apt-get update  && \
     mkdir build-bupc && \
     cd build-bupc && \
     ../$BUPCDIR/configure MPI_CC=mpicc CUPC2C_TRANS=/usr/local/bin/clang-upc2c --prefix=/usr/local \
-         --disable-debug --disable-dependency-tracking --disable-ibv \
+         --disable-dependency-tracking --disable-ibv \
          --with-multiconf=+opt_cupc2c --enable-pshm --enable-pthreads --enable-udp --enable-mpi --enable-smp --disable-ibv --with-default-network=mpi \
          --enable-sptr-struct --disable-sptr-struct --with-sptr-packed-bits=10,18,36 && \
     make -j 31 && \
     make install && \
     cd - &&  \
-    apt-get purge -y wget libopenmpi-dev && \
+    apt-get purge -y wget && \
     apt-get autoremove -y && \
     apt-get clean && \
     apt-get autoclean && \
